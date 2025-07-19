@@ -3,17 +3,13 @@ Django==5.2.4
 djangorestframework==3.15.2
 django-cors-headers==4.3.1
 
-# Database Drivers
+# Database Support
 dj-database-url==3.0.1
 psycopg2-binary==2.9.9
 pymysql==1.1.0
-mysqlclient==2.2.4
 
-# AI/ML for Recipe Generation
+# AI Recipe Generation (let pip resolve google-auth version automatically)
 google-generativeai==0.8.3
-google-auth==2.24.0
-google-auth-oauthlib==1.1.0
-google-auth-httplib2==0.1.1
 
 # HTTP Requests & Networking
 requests==2.32.3
@@ -37,32 +33,6 @@ whitenoise==6.6.0
 pytz==2024.1
 python-dateutil==2.9.0.post0
 
-# Core Python Dependencies# Core Django & Web Framework
-Django==5.2.4
-djangorestframework==3.15.2
-django-cors-headers==4.3.1
-
-# Database
-dj-database-url==3.0.1
-psycopg2-binary==2.9.9
-
-# AI/ML for Recipe Generation
-google-generativeai==0.8.3
-
-# HTTP Requests
-requests==2.32.3
-urllib3==2.2.2
-
-# JSON Processing
-simplejson==3.19.3
-
-# Environment Variables
-python-decouple==3.8
-
-# Production Server (Optional)
-gunicorn==21.2.0
-whitenoise==6.6.0
-
-# Utilities
-pytz==2024.1
-python-dateutil==2.9.0.post0
+# Django Core Dependencies
+asgiref==3.9.1
+sqlparse==0.5.3
