@@ -62,27 +62,40 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'recipe_generator.wsgi.application'
+# Database configuration - ROBUST VERSION
+import dj_database_url
+import os
 
-# Database configuration for Render
-# This will use PostgreSQL on Render and SQLite locally
-# Database configuration - UPDATED
+# Default to SQLite for local development
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+# Override with PostgreSQL if DATABASE_URL is provided
 if 'DATABASE_URL' in os.environ:
-    # Production PostgreSQL
-    DATABASES = {
-        'default': dj_database_url.config(
+    try:
+        DATABASES['default'] = dj_database_url.config(
             default=os.environ['DATABASE_URL'],
             conn_max_age=600,
             conn_health_checks=True,
         )
-    }
-else:
-    # Local SQLite
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+        # Ensure we're using PostgreSQL backend
+        DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
+        
+        # Add SSL requirement for production
+        if not DEBUG:
+            DATABASES['default']['OPTIONS'] = {
+                'sslmode': 'require',
+            }
+            
+        print("✅ Using PostgreSQL database")
+    except Exception as e:
+        print(f"⚠️ PostgreSQL connection failed, falling back to SQLite: {e}")
+        # Keep SQLite as fallback
+        pass
 # Security settings for production
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
