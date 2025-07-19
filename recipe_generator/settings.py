@@ -65,14 +65,24 @@ WSGI_APPLICATION = 'recipe_generator.wsgi.application'
 
 # Database configuration for Render
 # This will use PostgreSQL on Render and SQLite locally
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',  # Fallback for local development
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
-
+# Database configuration - UPDATED
+if 'DATABASE_URL' in os.environ:
+    # Production PostgreSQL
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ['DATABASE_URL'],
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    # Local SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 # Security settings for production
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
