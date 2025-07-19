@@ -62,10 +62,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'recipe_generator.wsgi.application'
-# Database configuration - ROBUST VERSION
-import dj_database_url
-import os
 
+# Database configuration - ROBUST VERSION
 # Default to SQLite for local development
 DATABASES = {
     'default': {
@@ -96,6 +94,7 @@ if 'DATABASE_URL' in os.environ:
         print(f"⚠️ PostgreSQL connection failed, falling back to SQLite: {e}")
         # Keep SQLite as fallback
         pass
+
 # Security settings for production
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -145,14 +144,45 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
-# CORS settings
+# CORS settings - UPDATED TO FIX YOUR ISSUE
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Next.js development server
+    "http://localhost:3000",  # Local development
     "https://localhost:3000",
+    "https://recipie-gen-frontend-pink.vercel.app",  # Your exact Vercel URL
 ]
 
-# Allow all origins in development only
-CORS_ALLOW_ALL_ORIGINS = DEBUG
+# Temporarily allow all origins for immediate fix
+CORS_ALLOW_ALL_ORIGINS = True
+
+# Additional CORS settings for better compatibility
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+# Allow all Vercel preview URLs and environment-based frontend URL
+if not DEBUG:
+    CORS_ALLOWED_ORIGINS.extend([
+        "https://*.vercel.app",
+    ])
 
 # Add production frontend URL when available
 if 'FRONTEND_URL' in os.environ:
